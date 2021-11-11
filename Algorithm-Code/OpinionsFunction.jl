@@ -18,8 +18,8 @@ function Opinions(W::Array{Float64,2},time::Int64,initial,model::String="degroot
   for i in 1:agents
     #Check row i sums to 1
     if isapprox(1,sum(W[i,:]))==false
-      #error("Opinions: row $i of W does not sum to 1")
       newsum=sum(W[i,:])
+      println(W[i,:])
       error("Opinions: row $i of W sums to $newsum")
     end
   end
@@ -39,7 +39,7 @@ function Opinions(W::Array{Float64,2},time::Int64,initial,model::String="degroot
       #Change model to degroot
       model="degroot"
     #Check if decay parameter is specified but not between 0 and 1
-    elseif lambda<=0 || lambda>=1
+    elseif lambda<0 || lambda>1
       error("Opinions: decay parameter (lambda) must be between 0 and 1")
     end
   end
@@ -58,14 +58,14 @@ function Opinions(W::Array{Float64,2},time::Int64,initial,model::String="degroot
   #Replace first column of Xhat with initial opinions
   Xhat[:,1]=initial
   #Check for bounded confidence model
-  if bounded==true 
+  if bounded==true
     #Check bounded confidence parameter (delta) is specified
     if delta==nothing
       warn("Opinions: bounded confidence selected with no bounded confidence parameter (delta) specified, bounded confidence ignored")
       #Ignore request for bounded confidence
       bounded=false
     #Check if decay parameter specified but not between 0 and 1
-    elseif delta<=0 || delta>=1
+    elseif delta<0 || delta>1
       error("Opinions: bounded confidence parameter (delta) must be between 0 and 1")
     end
     if model=="decay"
@@ -75,7 +75,7 @@ function Opinions(W::Array{Float64,2},time::Int64,initial,model::String="degroot
         Wbounded=W
         #Loop through all agents (columns)
         for j in 1:agents
-          #Loop through all agents past agent i (columns)
+          #Loop through all agents past agent j (columns)
           for i in (j+1):agents
             #Check if agents i and j are outside bound for influenced
             if abs(Xhat[i,t]-Xhat[j,t])>delta
@@ -83,10 +83,22 @@ function Opinions(W::Array{Float64,2},time::Int64,initial,model::String="degroot
               Wbounded[i,j]=0
               #Scale row i so it still sums to 1
               Wbounded[i,:]=Wbounded[i,:]/sum(Wbounded[i,:])
+              #BANDAID
+              #Check if Wbounded contains any nonzero elements
+              if sum(Wbounded[i,:])==0
+                Wbounded[i,:]=zeros(1,agents)
+                Wbounded[i,i]=1
+              end
               #Force weight agent j places on agent i to 0
               Wbounded[j,i]=0
               #Scale row j so it still sums to 1
               Wbounded[j,:]=Wbounded[j,:]/sum(Wbounded[j,:])
+              #BANDAID
+              #Check if Wbounded contains any nonzero elements
+              if sum(Wbounded[j,:])==0
+                Wbounded[j,:]=zeros(1,agents)
+                Wbounded[j,j]=1
+              end
             end
           end
         end
