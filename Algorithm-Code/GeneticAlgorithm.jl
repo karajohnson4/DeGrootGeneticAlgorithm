@@ -392,13 +392,13 @@ function GA(X,W=nothing,model="degroot",lambda=nothing,bounded=false,delta=nothi
     W,new,replace,swap=Selection(W,time,X,chromosomes,nonelite,agents,model,lambda,bounded,delta,power,min,max)
     #Check if deviation of elite chromosome is less than minimum deviation
     if new<=min_dev
-      println("Minimum deviation of $min_dev reached after $iter iterations")
+      #println("Minimum deviation of $min_dev reached after $iter iterations")
       #End loop through operators
       break
     end
     #Check if maximum number of iterations is exceded
     if iter>max_iter
-      println("Maximum number of iterations $max_iter reached")
+      #println("Maximum number of iterations $max_iter reached")
       #End loop through operators
       break
     end
@@ -442,7 +442,7 @@ function GA(X,W=nothing,model="degroot",lambda=nothing,bounded=false,delta=nothi
         #Reset probability of blending to specified max
         probb=maxb
       end
-      println("Probability of blending increased to $probb after $max_iterb iterations with no improvment at iteration $iter")
+      #println("Probability of blending increased to $probb after $max_iterb iterations with no improvment at iteration $iter")
     end
     #Check if maximuim number of iterations without improvment for crossover operator is reached
     if iterc>max_iterc
@@ -455,7 +455,7 @@ function GA(X,W=nothing,model="degroot",lambda=nothing,bounded=false,delta=nothi
         #Reset probability of crossover to specified min
         probc=minc
       end
-      println("Probability of crossover decreased to $probc after $max_iterc iterations with no improvment at iteration $iter")
+      #println("Probability of crossover decreased to $probc after $max_iterc iterations with no improvment at iteration $iter")
     end
     #Check if maximuim number of iterations without improvment for mutation operator is reached
     if iterm>max_iterm
@@ -468,7 +468,7 @@ function GA(X,W=nothing,model="degroot",lambda=nothing,bounded=false,delta=nothi
         #Reset probability of mutation to specified min
         probm=minm
       end
-      println("Probability of mutation decreased to $probm after $max_iterm iterations with no improvment at iteration $iter")
+      #println("Probability of mutation decreased to $probm after $max_iterm iterations with no improvment at iteration $iter")
     end
     #Check if maximuim number of iterations without improvment for sigma is reached
     if iters>max_iters
@@ -481,7 +481,7 @@ function GA(X,W=nothing,model="degroot",lambda=nothing,bounded=false,delta=nothi
         #Reset sigma to specified min
         sigma=mins
       end
-      println("Sigma decreased to $sigma after $max_iters iterations with no improvment at iteration $iter")
+      #println("Sigma decreased to $sigma after $max_iters iterations with no improvment at iteration $iter")
     end
     #Check if maximum number of iterations with no improvment for chromosome reintroduction is reached
     if iterr>max_iterr
@@ -491,13 +491,13 @@ function GA(X,W=nothing,model="degroot",lambda=nothing,bounded=false,delta=nothi
       if reintroduce=="elite"
         #Replace worst chromosome with elite chromosome
         W[replace]=W[chromosomes]
-        println("Elite chromosome reintroduced after $max_iterr iterations with no improvment at iteration $iter")
+        #println("Elite chromosome reintroduced after $max_iterr iterations with no improvment at iteration $iter")
       end
       #Check for identity matrix reintroduction
       if reintroduce=="identity"
         #Replace worst chromosome with identity (or modified identity) matrix
         W[replace]=diagonal
-        println("Identity matrix reintroduced after $max_iterr iterations with no improvment at iteration $iter")
+        #println("Identity matrix reintroduced after $max_iterr iterations with no improvment at iteration $iter")
       end
     end
     #Save copy of parent chromosomes
@@ -505,7 +505,7 @@ function GA(X,W=nothing,model="degroot",lambda=nothing,bounded=false,delta=nothi
     #Check if iteration details should be printed
     if mod(iter,print_iter)==0 || iter==1
       dev_print=new*1000
-      println("Iter: $iter, Dev: $dev_print")
+      #println("Iter: $iter, Dev: $dev_print")
     end
     #Save version of W for blending operator
     Wstar=deepcopy(W)
