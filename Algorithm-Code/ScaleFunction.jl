@@ -45,13 +45,21 @@ function Scale(response::Array,min::Int,max::Int,back::Bool=false)
         error("Scale: elements in response must either be missing or between 0 and 1 for back-transformation")
       end
     end
+    #Loop through all responses
+    for i in 1:responses
+      #Check if response is 0
+      if response[i]==0
+        response[i]+=0.01
+      end
+    end
     #Rescale response to range of likert-scale values
-    response1=response1.*scale.+1/2
+    response1=response1.*scale
     #Round response to integer values
-    response1=round.(response1)
+    response1=ceil.(response1)
     #Shift responses to original likert scale
     response1.-=internal
     #Return scaled responses
     return response1
   end
 end
+
